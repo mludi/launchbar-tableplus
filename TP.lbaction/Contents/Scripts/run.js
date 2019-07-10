@@ -14,17 +14,15 @@ function suggestions(argument) {
         const groups = File.readPlist('~/Library/Application Support/com.tinyapp.TablePlus/Data/ConnectionGroups.plist');
 
         let suggestions = [];
-        let results = [];
+        let filteredConnections = [];
         if (argument && argument !== 'undefined') {
-            results = connections.filter(connection => connection.ConnectionName.toLowerCase().indexOf(argument.toLocaleLowerCase()) !== -1);
+            filteredConnections = connections.filter(connection => connection.ConnectionName.toLowerCase().indexOf(argument.toLocaleLowerCase()) !== -1);
         } else {
-            results = connections;
+            filteredConnections = connections;
         }
 
 
-        results.forEach(function (result) {
-            let connection = result;
-
+        filteredConnections.forEach(function (connection) {            
             const groupKey = groups.map(e => e.ID).indexOf(connection.GroupID);
             const group = groups[groupKey];
             const url = `tableplus://?id=${connection.ID}`;
@@ -48,6 +46,7 @@ function suggestions(argument) {
         });
 
         return suggestions;
+
     } catch (exception) {
         LaunchBar.alert('Error while reading plist: ' + exception);
         return [];
